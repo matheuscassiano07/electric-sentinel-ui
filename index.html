@@ -1,24 +1,231 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>electric-sentinel-ui</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinela Elétrico - Dashboard de Monitoramento de Carbono</title>
+    <meta name="description" content="Dashboard de monitoramento de emissões de carbono com IA preditiva">
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i data-feather="zap"></i>
+                    <h1>Sentinela Elétrico</h1>
+                </div>
+            </div>
+            
+            <div class="sidebar-nav">
+                <button class="nav-item active" data-tab="dashboard">
+                    <i data-feather="activity"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-tab="reports">
+                    <i data-feather="bar-chart-3"></i>
+                    <span>Relatórios IA</span>
+                </button>
+                <button class="nav-item" data-tab="settings">
+                    <i data-feather="settings"></i>
+                    <span>Configurações</span>
+                </button>
+            </div>
+        </nav>
 
-    <meta property="og:title" content="electric-sentinel-ui" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Screen -->
+            <div id="dashboard-screen" class="screen active">
+                <div class="dashboard-grid">
+                    <!-- Carbon Intensity Card -->
+                    <div class="card intensity-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i data-feather="zap"></i>
+                            </div>
+                            <div class="card-title">
+                                <h3>Intensidade de Carbono Agora</h3>
+                                <p>Tempo real</p>
+                            </div>
+                        </div>
+                        <div class="intensity-display">
+                            <div class="intensity-value" id="current-intensity">188</div>
+                            <div class="intensity-unit">gCO₂eq/kWh</div>
+                        </div>
+                    </div>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+                    <!-- Alert Card -->
+                    <div class="card alert-card">
+                        <div class="card-header">
+                            <div class="card-icon alert-icon">
+                                <i data-feather="alert-triangle"></i>
+                            </div>
+                            <div class="card-title">
+                                <h3>Alerta Preditivo</h3>
+                                <p>Sistema de IA</p>
+                            </div>
+                        </div>
+                        <div class="alert-message" id="alert-message">
+                            🔴 ALERTA: Pico de emissão previsto para amanhã, das 14:00 às 17:00.
+                        </div>
+                    </div>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+                    <!-- Trend Card -->
+                    <div class="card trend-card">
+                        <div class="card-header">
+                            <div class="card-icon success-icon">
+                                <i data-feather="trending-up"></i>
+                            </div>
+                            <div class="card-title">
+                                <h3>Tendência 24h</h3>
+                                <p>Análise preditiva</p>
+                            </div>
+                        </div>
+                        <div class="trend-display">
+                            <div class="trend-value">-12%</div>
+                            <div class="trend-label">Redução esperada</div>
+                        </div>
+                    </div>
+
+                    <!-- Chart Card -->
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>Histórico de Intensidade - Últimas 24h</h3>
+                            <p>Variação da intensidade de carbono ao longo do dia</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="intensityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Screen -->
+            <div id="reports-screen" class="screen">
+                <div class="screen-header">
+                    <div class="screen-icon">
+                        <i data-feather="file-text"></i>
+                    </div>
+                    <div class="screen-title">
+                        <h1>Relatórios Gerados por IA</h1>
+                        <p>Análises automáticas e insights inteligentes sobre emissões de carbono</p>
+                    </div>
+                </div>
+
+                <div class="card report-card">
+                    <div class="report-header">
+                        <div class="report-title">
+                            <i data-feather="file-text"></i>
+                            <h2>Análise de Emissões de Carbono - Semana 33/2024</h2>
+                        </div>
+                        <div class="report-date">
+                            <i data-feather="calendar"></i>
+                            14 de Agosto de 2024, 15:30
+                        </div>
+                    </div>
+                    
+                    <div class="report-content" id="report-content">
+                        <!-- Report content will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Screen -->
+            <div id="settings-screen" class="screen">
+                <div class="screen-header">
+                    <div class="screen-icon">
+                        <i data-feather="settings"></i>
+                    </div>
+                    <div class="screen-title">
+                        <h1>Configurações do Sistema</h1>
+                        <p>Personalize os alertas e notificações do Sentinela Elétrico</p>
+                    </div>
+                </div>
+
+                <div class="settings-grid">
+                    <!-- Email Settings -->
+                    <div class="card settings-card">
+                        <div class="card-header">
+                            <div class="card-icon email-icon">
+                                <i data-feather="mail"></i>
+                            </div>
+                            <div class="card-title">
+                                <h3>Alertas de E-mail</h3>
+                                <p>Configure seu e-mail para receber notificações</p>
+                            </div>
+                        </div>
+                        
+                        <form class="settings-form" id="email-form">
+                            <div class="form-group">
+                                <label for="email">Endereço de E-mail</label>
+                                <input type="email" id="email" placeholder="seu@email.com">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i data-feather="save"></i>
+                                Salvar E-mail
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Alert Limit Settings -->
+                    <div class="card settings-card">
+                        <div class="card-header">
+                            <div class="card-icon warning-icon">
+                                <i data-feather="alert-triangle"></i>
+                            </div>
+                            <div class="card-title">
+                                <h3>Limite de Alerta</h3>
+                                <p>Defina quando receber alertas de alta emissão</p>
+                            </div>
+                        </div>
+                        
+                        <form class="settings-form" id="limit-form">
+                            <div class="form-group">
+                                <label for="limit">Limite (gCO₂eq/kWh)</label>
+                                <input type="number" id="limit" value="400" min="0">
+                                <small>Valor atual: <span id="current-limit">400</span> gCO₂eq/kWh</small>
+                            </div>
+                            <button type="submit" class="btn btn-warning">
+                                <i data-feather="save"></i>
+                                Salvar Limite
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Status Card -->
+                <div class="card status-card">
+                    <h3>Status do Sistema</h3>
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <div class="status-indicator active"></div>
+                            <span>Monitoramento Ativo</span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-indicator active"></div>
+                            <span>IA Funcionando</span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-indicator active"></div>
+                            <span>Dados Atualizados</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
 </html>
